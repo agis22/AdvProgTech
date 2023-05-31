@@ -1,4 +1,3 @@
-import random
 import time
 from paho.mqtt import client as mqtt_client
 
@@ -8,9 +7,9 @@ mqtt_port = 1883
 mqtt_topic = "grupatras/lab/1072803"
 
 # Generate a Client ID with the publish prefix.
-client_id = f'publish-{random.randint(0, 1000)}'
+client_id = f'publish-999'
 
-# Συνδεθείτε στον MQTT broker.
+# Connect to MQTT broker.
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
         if rc == 0:
@@ -23,23 +22,20 @@ def connect_mqtt():
     client.connect(mqtt_broker, mqtt_port)
     return client
 
-# Εκδόστε ένα μήνυμα στο topic.
-def publish(client):
-    for i in range(5):
-        time.sleep(1)
-        msg = f"You have {i+1} messages"
-        result = client.publish(mqtt_topic, msg)
-        status = result[0]
-        if status == 0:
-            print(f"Send `{msg}` to topic: {mqtt_topic}")
-        else:
-            print(f"Failed to send message to topic: {mqtt_topic}")
-
-
 def main():
     client = connect_mqtt()
+    # Start publishing
     client.loop_start()
-    publish(client)
+    # Publish message
+    time.sleep(1)
+    msg = "You have " + str(i+1) + " messages"
+    result = client.publish(mqtt_topic, msg)
+    status = result[0]
+    if status == 0:
+        print(f"Send `{msg}` to topic: {mqtt_topic}")
+    else:
+        print(f"Failed to send message to topic: {mqtt_topic}")
+    # Stop publishing
     client.loop_stop()
 
 
